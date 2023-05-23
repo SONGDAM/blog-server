@@ -1,0 +1,19 @@
+{
+  "name": "blog-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/server": "^4.7.1",
+    "graphql": "^16.6.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "ts-node ./src/server.ts",
+    "start:prod": "npx tsc && ts-node ./dist/server.js"
+  }
+}
