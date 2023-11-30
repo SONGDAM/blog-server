@@ -1,8 +1,21 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
+interface Post {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  body: string;
+  title: string;
+}
+
+interface CreatePostInput {
+  title: string;
+  content: string;
+}
+
 const typeDefs = `#graphql
-  type Post {
+ type Post {
     id: ID!
     createdAt: String!
     updatedAt: String!
@@ -11,7 +24,17 @@ const typeDefs = `#graphql
   }
 
   type Query {
-    posts: [Post]
+    posts: [Post!]!
+    post(id: ID!): Post
+  }
+
+  type Mutation {
+    createPost(input: CreatePostInput!): Post
+  }
+
+  input CreatePostInput {
+    title: String!
+    content: String!
   }
 `;
 
@@ -35,6 +58,22 @@ const posts = [
 const resolvers = {
   Query: {
     posts: () => posts,
+    post: (parent: any, { id }: any) => posts.find((post) => post.id === id),
+  },
+  Mutation: {
+    createPost: (parent: any, { input }: { input: CreatePostInput }) => {
+      const { title, content } = input;
+      const newPost: Post = {
+        id: String(posts.length + 1),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        body: content,
+        title,
+      };
+      posts.push(newPost);
+
+      return newPost;
+    },
   },
 };
 
